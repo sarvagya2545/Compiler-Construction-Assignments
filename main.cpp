@@ -1,8 +1,6 @@
 #include <iostream> 
 #include<bits/stdc++.h>
 #include <fstream>
-
-
 using namespace std;
 
 // structure of token
@@ -11,7 +9,6 @@ struct token{
 	string lexeme;
 	int lineC;
 };
-
 static token newtk(int tk_num, string lex, int line){
 	token tok;
 	tok.token_no = tk_num;

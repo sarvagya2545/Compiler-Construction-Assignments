@@ -2,6 +2,7 @@
 #include<bits/stdc++.h>
 #include <fstream>
 
+
 using namespace std;
 
 // structure of token
@@ -11,7 +12,7 @@ struct token{
 	int lineC;
 };
 
-static token newtk(int tk_num,string lex,int line){
+static token newtk(int tk_num, string lex, int line){
 	token tok;
 	tok.token_no = tk_num;
 	tok.lexeme = lex;
@@ -23,13 +24,13 @@ vector<token> token_list;
 vector<string> Keywords = {"main", "int", "float", "string", "bool", "for", "while", "return", "var", "if", "elsif", "else", "print"};
 
 // stray character error
-void throw_error(char ch,int lineC){
-	cout<<"Lexical error: stray "<< "'" << ch << "'" << "in program at line number = "<<lineC<<endl;
+void throw_error(char ch, int lineC){
+	cout<<"Lexical error: stray "<< "'" << ch << "'" << "in program at line number = "<< lineC <<endl;
 }
 
 // stray lexeme error
-void throw_error(string lex,int *index,int lineC){
-	cout<<"Lexical error: stray "<< "'" << lex << "'" << "in program at line number = "<<lineC<<endl;
+void throw_error(string lex, int *index, int lineC){
+	cout<<"Lexical error: stray "<< "'" << lex << "'" << "in program at line number = "<< lineC <<endl;
     (*index)++;
 }
 
@@ -37,6 +38,7 @@ void throw_error(string lex,int *index,int lineC){
 void skipComments(string line, int *index, int lineC){
 	(*index)++;
 	if(line[*index] == '%'){
+		// TODO 
 		while(line[*index]) (*index)++;
 	}
 	else{
@@ -47,7 +49,7 @@ void skipComments(string line, int *index, int lineC){
 }
 
 //dfa for arithmetic op
-void scanArithOp(string line,int *index,int lineC){
+void scanArithOp(string line, int *index, int lineC){
 	switch(line[*index]){
 		case '+': token_list.push_back(newtk(300, "+", lineC)); break;
 		case '-': token_list.push_back(newtk(301, "-", lineC)); break;
@@ -61,37 +63,42 @@ void scanArithOp(string line,int *index,int lineC){
 void scanRelOp(string line,int *index,int lineC){
 	switch(line[*index]){
 		case '<':
-		(*index)++;
-		if(line[*index]=='='){
-		token_list.push_back(newtk(600,"<=",lineC));}
-		else{
-			(*index)--;
-			token_list.push_back(newtk(601,"<",lineC));
-		}
-		break;
+			(*index)++;
+			if(line[*index]=='='){
+				token_list.push_back(newtk(600,"<=", lineC));
+			}
+			else{
+				(*index)--;
+				token_list.push_back(newtk(601,"<", lineC));
+			}
+			break;
+
 		case '>':
-		(*index)++;
-		if(line[*index]=='='){
-		token_list.push_back(newtk(602,">=",lineC));}
-		else{
-			(*index)--;
-			token_list.push_back(newtk(603,">",lineC));
-		}
-		break;
+			(*index)++;
+			if(line[*index]=='='){
+				token_list.push_back(newtk(602,">=",lineC));
+			}
+			else{
+				(*index)--;
+				token_list.push_back(newtk(603,">",lineC));
+			}
+			break;
+
 		case '=':
-		 (*index)++;
-		 if(line[*index]=='='){
-		   token_list.push_back(newtk(604,"==",lineC));}
-         else if(line[*index]==' '){
-         	throw_error("=",index,lineC);
-         	return;
-         }
-         else{
-         	(*index)--;
-         	throw_error("=",index,lineC);
-         	return;
-         }
-		break;
+			(*index)++;
+		 	if(line[*index]=='='){
+		   		token_list.push_back(newtk(604,"==",lineC));
+			}
+         	else if(line[*index]==' '){
+         		throw_error("=",index,lineC);
+         		return;
+        	}
+         	else{
+         		(*index)--;
+         		throw_error("=",index,lineC);
+         		return;
+         	}
+			break;
 
 	}
 	(*index)++;
@@ -126,7 +133,8 @@ void getDelim(string line, int* index, int lineC){
 		case ',': token_list.push_back(newtk(404, ",", lineC)); break;
 		case '[': token_list.push_back(newtk(405, "[", lineC)); break;
 		case ']': token_list.push_back(newtk(406, "]", lineC)); break;
-		case ';': token_list.push_back(newtk(200, ";", lineC)); index++; break;
+		case ';': token_list.push_back(newtk(200, ";", lineC)); break;
+		// case ';': token_list.push_back(newtk(200, ";", lineC)); index++; break;
 
 	}
 	(*index)++;
@@ -134,6 +142,7 @@ void getDelim(string line, int* index, int lineC){
 
 // DFA for scanning numbers
 void scanNumberToken(string line, int* index, int lineC){
+	// TODO 
 	int state = 0; //start state
 	string lexeme = "";
 	
@@ -220,7 +229,7 @@ void scanNamesToken(string line, int* index, int lineC){
 	int flg = 0;
 	for(int i = 0; i < Keywords.size(); i++){
 		if(lexeme == Keywords[i]){
-			token_list.push_back(newtk(501+i, lexeme, lineC));
+			token_list.push_back(newtk(501 + i, lexeme, lineC));
 			flg = 1;
 			break;
 		}
@@ -267,7 +276,7 @@ int main(){
 					case ';': getDelim(line, &index, lineC); break; 
 					case ':': scanAssignOp(line, &index, lineC); break;
 
-					default : throw_error(line[index], lineC);index++; break;
+					default : throw_error(line[index], lineC); index++; break;
 
 				}
 			}

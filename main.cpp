@@ -139,28 +139,36 @@ void Delimiter(string line, int* index, int lineC){
 
 // DFA for scanning numbers
 void Number_token(string line, int* index, int lineC){
-	// TODO 
 	int state = 0; //start state
 	string lexeme = "";
-	
+	int neg = 0;
+
+	if(line[*index] == '-'){
+		lexeme += line[*index];
+		(*index)++;
+		neg = 1;
+	}
+
 	if(line[*index] < '0' || line[*index] > '9'){
-		state = 5;
-		throw_error(lexeme, index, lineC);
-		(*index)--;
+		if(neg){
+			(*index)--;
+			Arithmetic_Op(line, index, lineC);
+		}
+		else{
+			(*index)--;
+			state = 5;
+			throw_error(lexeme, index, lineC);
+		}
 		return;
 	}
 
 	if(state == 0){
-        if(line[*index] >= '1' && line[*index] <= '9'){
+        if(line[*index] >= '0' && line[*index] <= '9'){
             state = 2;
             lexeme += line[*index];
             (*index)++;
         }
-        else if(line[*index] == '0'){
-            state = 1;
-            lexeme += line[*index];
-            (*index)++;
-        }
+
         else if(line[*index] < '0' || line[*index] > '9'){
             state = 5;
             throw_error(lexeme, index, lineC);
@@ -238,17 +246,17 @@ int main(){
 	ifstream file_in; // input file stream
 	ofstream file_out; // output file stream
 
-	file_in.open("C:/Users/iamth/Documents/GitHub/Compiler-Construction-Assignments/LEXER/TestCases/tc_3.txt");
+	file_in.open("C:/Users/iamth/Documents/GitHub/Compiler-Construction-Assignments/TestCases/tc_3.txt");
     int lineC = 0; // line number count
 	string line; 
-	file_out.open("C:/Users/iamth/Documents/GitHub/Compiler-Construction-Assignments/LEXER/TestCases/tc_3_op.txt");
+	file_out.open("C:/Users/iamth/Documents/GitHub/Compiler-Construction-Assignments/TestCases/tc_3_op.txt");
 
 	while(getline(file_in, line)){
 		lineC++; 
 		int index = 0;
 
 		while(line[index]){
-			if((line[index] >= '0' && line[index] <= '9')) Number_token(line, &index, lineC); // scan number literals
+			if((line[index] >= '0' && line[index] <= '9') || (line[index] == '-')) Number_token(line, &index, lineC); // scan number literals
 			else if((line[index] >= 'A' && line[index] <= 'Z') || (line[index] >= 'a' && line[index] <= 'z')) Scan_Identifiers(line, &index, lineC);
 		
 			else{
@@ -271,11 +279,10 @@ int main(){
 					case '{':
 					case '}':
 					case ',': Delimiter(line, &index, lineC); break;	// got a delimiter
-					case ';': token_list.push_back(newtk(200, ";", lineC)); break;
+					case ';': token_list.push_back(newtk(200, ";", lineC)); index++;  break;
 					case ':': Assignment_Op(line, &index, lineC); break; // scan for assignment operator
 
 					default : throw_error(line[index], lineC); index++; break;
-
 				}
 			}
 		}

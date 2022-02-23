@@ -6,7 +6,9 @@ main(){
   
   }
   else{
-   x := 3.x7; %% Will give error %%
+   x := 123.67;
+   y := 25 - (-5);
+
   } 
   return;
    

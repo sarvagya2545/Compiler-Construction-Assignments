@@ -46,7 +46,6 @@ void Skip_Comments(string line, int *index, int lineC){
 	}
 }
 
-//dfa for arithmetic op
 void Arithmetic_Op(string line, int *index, int lineC){
 	switch(line[*index]){
 		case '+': token_list.push_back(newtk(300, "+", lineC)); break;
@@ -131,7 +130,7 @@ void Delimiter(string line, int* index, int lineC){
 		case ',': token_list.push_back(newtk(404, ",", lineC)); break;
 		case '[': token_list.push_back(newtk(405, "[", lineC)); break;
 		case ']': token_list.push_back(newtk(406, "]", lineC)); break;
-		case ';': token_list.push_back(newtk(200, ";", lineC)); break;
+		// case ';': token_list.push_back(newtk(200, ";", lineC)); break;
 		// case ';': token_list.push_back(newtk(200, ";", lineC)); index++; break;
 
 	}
@@ -239,10 +238,10 @@ int main(){
 	ifstream file_in; // input file stream
 	ofstream file_out; // output file stream
 
-	file_in.open("C:/Users/iamth/Documents/GitHub/Compiler-Construction-Assignments/TestCases/tc_3.txt");
+	file_in.open("C:/Users/iamth/Documents/GitHub/Compiler-Construction-Assignments/LEXER/TestCases/tc_3.txt");
     int lineC = 0; // line number count
 	string line; 
-	file_out.open("C:/Users/iamth/Documents/GitHub/Compiler-Construction-Assignments/TestCases/tc_3_op.txt");
+	file_out.open("C:/Users/iamth/Documents/GitHub/Compiler-Construction-Assignments/LEXER/TestCases/tc_3_op.txt");
 
 	while(getline(file_in, line)){
 		lineC++; 
@@ -271,8 +270,8 @@ int main(){
 					case ']':
 					case '{':
 					case '}':
-					case ',': 
-					case ';': Delimiter(line, &index, lineC); break;	// got a delimiter
+					case ',': Delimiter(line, &index, lineC); break;	// got a delimiter
+					case ';': token_list.push_back(newtk(200, ";", lineC)); break;
 					case ':': Assignment_Op(line, &index, lineC); break; // scan for assignment operator
 
 					default : throw_error(line[index], lineC); index++; break;

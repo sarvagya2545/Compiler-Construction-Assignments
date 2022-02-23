@@ -1,0 +1,12 @@
+%% Program for summing n numbers %%
+int main(){
+   int n;
+   n := 10;
+   int sum;
+   sum := 0;
+   for(int i:=0;i<=n;i:=i+1){
+      sum := sum + i;
+   }
+   return;
+
+}

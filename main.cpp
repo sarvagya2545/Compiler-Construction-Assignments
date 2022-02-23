@@ -253,6 +253,7 @@ int main(){
 		
 			else{
 				switch(line[index]){
+					// TODO - && || implementation
 					case '%': skipComments(line, &index, lineC); break; 
 					case '\t':
 					case ' ': index++; break; // ignore tabs and whitespaces

@@ -1,0 +1,12 @@
+Token 501, string "main", line_in_file number 1
+Token 402, string "(", line_in_file number 1
+Token 403, string ")", line_in_file number 1
+Token 400, string "{", line_in_file number 1
+Token 502, string "int", line_in_file number 2
+Token 500, string "a", line_in_file number 2
+Token 404, string ",", line_in_file number 2
+Token 500, string "b", line_in_file number 2
+Token 200, string ";", line_in_file number 2
+Token 508, string "return", line_in_file number 3
+Token 200, string ";", line_in_file number 3
+Token 401, string "}", line_in_file number 4

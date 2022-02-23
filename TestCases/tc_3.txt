@@ -1,0 +1,13 @@
+main(){
+  int x := 20;
+  if(x<3){
+  }
+  elsif(x>20){
+  
+  }
+  else{
+   x := 3.x7; %% Will give error %%
+  } 
+  return;
+   
+}

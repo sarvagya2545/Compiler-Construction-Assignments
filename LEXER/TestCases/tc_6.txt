@@ -1,0 +1,6 @@
+main(){
+var a = 9;
+var b = 9.8;
+
+return;
+}

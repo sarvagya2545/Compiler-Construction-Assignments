@@ -30,6 +30,6 @@ Token 700, string ":=", line number 9
 Token 500, string "x7", line number 9
 Token 200, string ";", line number 9
 Token 401, string "}", line number 10
-Token 510, string "return", line number 11
+Token 515, string "return", line number 11
 Token 200, string ";", line number 11
 Token 401, string "}", line number 13

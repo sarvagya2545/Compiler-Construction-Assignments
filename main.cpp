@@ -63,29 +63,29 @@ void Relational_Op(string line,int *index,int lineNo){
 		case '<':
 			(*index)++;
 			if(line[*index] == '='){
-				token_list.push_back(createToken(600, "<=", lineNo));
+				token_list.push_back(createToken(500, "<=", lineNo));
 			}
 			else{
 				(*index)--;
-				token_list.push_back(createToken(601, "<", lineNo));
+				token_list.push_back(createToken(501, "<", lineNo));
 			}
 			break;
 
 		case '>':
 			(*index)++;
 			if(line[*index]=='='){
-				token_list.push_back(createToken(602, ">=",lineNo));
+				token_list.push_back(createToken(502, ">=",lineNo));
 			}
 			else{
 				(*index)--;
-				token_list.push_back(createToken(603, ">",lineNo));
+				token_list.push_back(createToken(503, ">",lineNo));
 			}
 			break;
 
 		case '=':
 			(*index)++;
 		 	if(line[*index]=='='){
-		   		token_list.push_back(createToken(604, "==", lineNo));
+		   		token_list.push_back(createToken(504, "==", lineNo));
 			}
          	else if(line[*index] == ' '){
          		throw_error("=",index,lineNo);
@@ -107,7 +107,7 @@ void Assignment_Op(string line, int* index, int lineNo){
 	(*index)++;
 
 	if(line[*index] == '=') {
-		token_list.push_back(createToken(700, ":=", lineNo));
+		token_list.push_back(createToken(800, ":=", lineNo));
 	} else if(line[*index] == ' '){
 		throw_error(":", index, lineNo);
 	    return;
@@ -128,7 +128,7 @@ void Boolean_Op(string line, int* index, int lineNo) {
 		lexeme += line[*index];
 		(*index)++;
 		(*index)++;
-		token_list.push_back(createToken(190, lexeme, lineNo));
+		token_list.push_back(createToken(400, lexeme, lineNo));
 	} else {
 		throw_error(lexeme, index, lineNo);
 		return;
@@ -138,13 +138,13 @@ void Boolean_Op(string line, int* index, int lineNo) {
 // scanning delimiters
 void Delimiter(string line, int* index, int lineNo){
 	switch(line[*index]){
-		case '{': token_list.push_back(createToken(400, "{", lineNo)); break;
-		case '}': token_list.push_back(createToken(401, "}", lineNo)); break;
-		case '(': token_list.push_back(createToken(402, "(", lineNo)); break;
-		case ')': token_list.push_back(createToken(403, ")", lineNo)); break;
-		case ',': token_list.push_back(createToken(404, ",", lineNo)); break;
-		case '[': token_list.push_back(createToken(405, "[", lineNo)); break;
-		case ']': token_list.push_back(createToken(406, "]", lineNo)); break;
+		case '{': token_list.push_back(createToken(600, "{", lineNo)); break;
+		case '}': token_list.push_back(createToken(601, "}", lineNo)); break;
+		case '(': token_list.push_back(createToken(602, "(", lineNo)); break;
+		case ')': token_list.push_back(createToken(603, ")", lineNo)); break;
+		case ',': token_list.push_back(createToken(604, ",", lineNo)); break;
+		case '[': token_list.push_back(createToken(605, "[", lineNo)); break;
+		case ']': token_list.push_back(createToken(606, "]", lineNo)); break;
 	}
 
 	(*index)++;
@@ -176,6 +176,7 @@ void Number_token(string line, int* index, int lineNo){
 		(*index)++;
 	}
 	else {
+		// 100 - integers
 		token_list.push_back(createToken(100, lexeme, lineNo));
 	}
 
@@ -200,6 +201,7 @@ void Number_token(string line, int* index, int lineNo){
             lexeme += line[*index];
     		(*index)++;
     	}
+		// 101 - floats
     	token_list.push_back(createToken(101, lexeme, lineNo));
     }
 }
@@ -215,12 +217,14 @@ void Scan_Identifiers(string line, int* index, int lineNo){
 	int flg = 0;
 	for(int i = 0; i < Keywords.size(); i++){
 		if(lexeme == Keywords[i]){
-			token_list.push_back(createToken(501 + i, lexeme, lineNo));
+			// 201 + i -> keywords
+			token_list.push_back(createToken(201 + i, lexeme, lineNo));
 			flg = 1;
 			break;
 		}
 	}
-	if(flg == 0) token_list.push_back(createToken(500, lexeme, lineNo));
+	// 200 -> identifier
+	if(flg == 0) token_list.push_back(createToken(200, lexeme, lineNo));
 }
 
 int main(){
@@ -245,10 +249,10 @@ int main(){
 		while(line[index]){
 			if((line[index] >= '0' && line[index] <= '9')) {
 				// scan number literals
-				Number_token(line, &index, lineNo);
+				Number_token(line, &index, lineNo); // 100 series
 			} else if((line[index] >= 'A' && line[index] <= 'Z') || (line[index] >= 'a' && line[index] <= 'z')){
 				// scan characters literals (identifiers)
-				Scan_Identifiers(line, &index, lineNo);
+				Scan_Identifiers(line, &index, lineNo); // 200
 			} else {
 				switch(line[index]){
 					case '%': Skip_Comments(line, &index, lineNo); break; // ignoring comments
@@ -257,21 +261,21 @@ int main(){
 					case '*':
 					case '/': 
 					case '+':
-					case '-': Arithmetic_Op(line, &index, lineNo); break; // scan arithmetic operators
+					case '-': Arithmetic_Op(line, &index, lineNo); break; // 300 // scan arithmetic operators
 					case '|':
-					case '&': Boolean_Op(line, &index, lineNo); break; // Boolean operators - && and ||
+					case '&': Boolean_Op(line, &index, lineNo); break; // 400 // Boolean operators - && and ||
 					case '<':
 					case '>':
-					case '=': Relational_Op(line, &index, lineNo); break; // scan relational operators
+					case '=': Relational_Op(line, &index, lineNo); break; // 500 // scan relational operators
                     case '(':
 					case ')':
                     case '[':
 					case ']':
 					case '{':
 					case '}':
-					case ',': Delimiter(line, &index, lineNo); break;	// got a delimiter
-					case ';': token_list.push_back(createToken(200, ";", lineNo)); index++;  break;
-					case ':': Assignment_Op(line, &index, lineNo); break; // scan for assignment operator
+					case ',': Delimiter(line, &index, lineNo); break; // 600	// got a delimiter
+					case ';': token_list.push_back(createToken(700, ";", lineNo)); index++;  break;
+					case ':': Assignment_Op(line, &index, lineNo); break; // 800 // scan for assignment operator
 
 					default : throw_error(line[index], lineNo); index++; break;
 				}

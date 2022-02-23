@@ -120,6 +120,20 @@ void Assignment_Op(string line, int* index, int lineNo){
 	(*index)++;
 }
 
+// Boolean operators
+void Boolean_Op(string line, int* index, int lineNo) {
+	string lexeme = "";
+	lexeme += line[*index];
+	if(line[*index] == line[(*index) + 1]) { // for && and ||
+		lexeme += line[*index];
+		(*index)++;
+		(*index)++;
+		token_list.push_back(createToken(190, lexeme, lineNo));
+	} else {
+		throw_error(lexeme, index, lineNo);
+		return;
+	}
+}
 
 // scanning delimiters
 void Delimiter(string line, int* index, int lineNo){
@@ -237,7 +251,6 @@ int main(){
 				Scan_Identifiers(line, &index, lineNo);
 			} else {
 				switch(line[index]){
-					// TODO - && || implementation
 					case '%': Skip_Comments(line, &index, lineNo); break; // ignoring comments
 					case '\t':
 					case ' ': index++; break; // ignore tabs and whitespaces
@@ -245,6 +258,8 @@ int main(){
 					case '/': 
 					case '+':
 					case '-': Arithmetic_Op(line, &index, lineNo); break; // scan arithmetic operators
+					case '|':
+					case '&': Boolean_Op(line, &index, lineNo); break; // Boolean operators - && and ||
 					case '<':
 					case '>':
 					case '=': Relational_Op(line, &index, lineNo); break; // scan relational operators

@@ -9,6 +9,7 @@ struct token{
 	string lexeme;
 	int lineC;
 };
+
 static token newtk(int tk_num, string lex, int line){
 	token tok;
 	tok.token_no = tk_num;
@@ -18,21 +19,21 @@ static token newtk(int tk_num, string lex, int line){
 }
 
 vector<token> token_list;
-vector<string> Keywords = {"main", "int", "float", "string", "bool", "for", "while", "return", "var", "if", "elsif", "else", "print"};
+vector<string> Keywords = {"main", "int", "float", "string", "bool", "true", "false", "print", "for", "while", "var", "if", "elsif", "else", "return"};
 
 // stray character error
 void throw_error(char ch, int lineC){
-	cout<<"Lexical error: stray "<< "'" << ch << "'" << "in program at line number = "<< lineC <<endl;
+	cout<<"Lexical error: stray "<< "'" << ch << "'" << " in program at line number = "<< lineC <<endl;
 }
 
 // stray lexeme error
 void throw_error(string lex, int *index, int lineC){
-	cout<<"Lexical error: stray "<< "'" << lex << "'" << "in program at line number = "<< lineC <<endl;
+	cout<<"Lexical error: stray "<< "'" << lex << "'" << " in program at line number = "<< lineC <<endl;
     (*index)++;
 }
 
 // ignore comments while reading input file
-void skipComments(string line, int *index, int lineC){
+void Skip_Comments(string line, int *index, int lineC){
 	(*index)++;
 	if(line[*index] == '%'){
 		// TODO 
@@ -46,7 +47,7 @@ void skipComments(string line, int *index, int lineC){
 }
 
 //dfa for arithmetic op
-void scanArithOp(string line, int *index, int lineC){
+void Arithmetic_Op(string line, int *index, int lineC){
 	switch(line[*index]){
 		case '+': token_list.push_back(newtk(300, "+", lineC)); break;
 		case '-': token_list.push_back(newtk(301, "-", lineC)); break;
@@ -57,7 +58,7 @@ void scanArithOp(string line, int *index, int lineC){
 }
 
 // dfa for relational operators
-void scanRelOp(string line,int *index,int lineC){
+void Relational_Op(string line,int *index,int lineC){
 	switch(line[*index]){
 		case '<':
 			(*index)++;
@@ -102,7 +103,7 @@ void scanRelOp(string line,int *index,int lineC){
 }
 
 //dfa for assignment op
-void scanAssignOp(string line, int* index, int lineC){
+void Assignment_Op(string line, int* index, int lineC){
 	(*index)++;
 	if(line[*index] == '=') token_list.push_back(newtk(700, ":=", lineC));
 	
@@ -121,7 +122,7 @@ void scanAssignOp(string line, int* index, int lineC){
 
 
 // scanning delimiters
-void getDelim(string line, int* index, int lineC){
+void Delimiter(string line, int* index, int lineC){
 	switch(line[*index]){
 		case '{': token_list.push_back(newtk(400, "{", lineC)); break;
 		case '}': token_list.push_back(newtk(401, "}", lineC)); break;
@@ -138,7 +139,7 @@ void getDelim(string line, int* index, int lineC){
 }
 
 // DFA for scanning numbers
-void scanNumberToken(string line, int* index, int lineC){
+void Number_token(string line, int* index, int lineC){
 	// TODO 
 	int state = 0; //start state
 	string lexeme = "";
@@ -216,7 +217,7 @@ void scanNumberToken(string line, int* index, int lineC){
 }
 
 // dfa for scanning named entities
-void scanNamesToken(string line, int* index, int lineC){
+void Scan_Identifiers(string line, int* index, int lineC){
 	string lexeme = "";
 	while((line[*index]) && ((line[*index] >= 'a' && line[*index] <= 'z') || (line[*index] >= '0' && line[*index] <= '9') || (line[*index] >= 'A' && line[*index] <= 'Z'))){
         lexeme += line[*index];
@@ -248,22 +249,22 @@ int main(){
 		int index = 0;
 
 		while(line[index]){
-			if((line[index] >= '0' && line[index] <= '9')) scanNumberToken(line, &index, lineC);
-			else if((line[index] >= 'A' && line[index] <= 'Z') || (line[index] >= 'a' && line[index] <= 'z')) scanNamesToken(line, &index, lineC);
+			if((line[index] >= '0' && line[index] <= '9')) Number_token(line, &index, lineC);
+			else if((line[index] >= 'A' && line[index] <= 'Z') || (line[index] >= 'a' && line[index] <= 'z')) Scan_Identifiers(line, &index, lineC);
 		
 			else{
 				switch(line[index]){
 					// TODO - && || implementation
-					case '%': skipComments(line, &index, lineC); break; 
+					case '%': Skip_Comments(line, &index, lineC); break; // ignoring comments
 					case '\t':
 					case ' ': index++; break; // ignore tabs and whitespaces
 					case '*':
 					case '/': 
 					case '+':
-					case '-': scanArithOp(line, &index, lineC); break; // arithmetic operators
+					case '-': Arithmetic_Op(line, &index, lineC); break; // scan arithmetic operators
 					case '<':
 					case '>':
-					case '=': scanRelOp(line, &index, lineC); break; // relational operator
+					case '=': Relational_Op(line, &index, lineC); break; // scan relational operators
                     case '(':
 					case ')':
                     case '[':
@@ -271,8 +272,8 @@ int main(){
 					case '{':
 					case '}':
 					case ',': 
-					case ';': getDelim(line, &index, lineC); break; 
-					case ':': scanAssignOp(line, &index, lineC); break;
+					case ';': Delimiter(line, &index, lineC); break;	// got a delimiter
+					case ':': Assignment_Op(line, &index, lineC); break; // scan for assignment operator
 
 					default : throw_error(line[index], lineC); index++; break;
 

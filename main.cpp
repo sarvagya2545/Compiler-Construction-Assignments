@@ -84,7 +84,7 @@ void scanRelOp(string line,int *index,int lineC){
 		case '=':
 			(*index)++;
 		 	if(line[*index]=='='){
-		   		token_list.push_back(newtk(604,"==",lineC));
+		   		token_list.push_back(newtk(604, "==", lineC));
 			}
          	else if(line[*index]==' '){
          		throw_error("=",index,lineC);
@@ -238,10 +238,10 @@ int main(){
 	ifstream file_in; // input file stream
 	ofstream file_out; // output file stream
 
-	file_in.open("C:/Users/iamth/Downloads/S_Compiler-Construction/TC/tc_4.txt");
+	file_in.open("C:/Users/iamth/Documents/GitHub/Compiler-Construction-Assignments/TestCases/tc_6.txt");
     int lineC = 0; // line number count
 	string line; 
-	file_out.open("C:/Users/iamth/Downloads/S_Compiler-Construction/TC/tc_4_op.txt");
+	file_out.open("C:/Users/iamth/Documents/GitHub/Compiler-Construction-Assignments/TestCases/tc_6_op.txt");
 
 	while(getline(file_in, line)){
 		lineC++; 

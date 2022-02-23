@@ -4,10 +4,12 @@ Token 403, string ")", line number 1
 Token 400, string "{", line number 1
 Token 511, string "var", line number 2
 Token 500, string "a", line number 2
+Token 700, string ":=", line number 2
 Token 100, string "9", line number 2
 Token 200, string ";", line number 2
 Token 511, string "var", line number 3
 Token 500, string "b", line number 3
+Token 700, string ":=", line number 3
 Token 101, string "9.8", line number 3
 Token 200, string ";", line number 3
 Token 515, string "return", line number 5
